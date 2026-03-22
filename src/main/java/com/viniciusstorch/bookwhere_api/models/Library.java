@@ -8,10 +8,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "users")
+@Table(name = "libraries")
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class User extends Account {   
+public class Library extends Account {
+    
+    String phone;
+    Double latitude;
+    Double longitude;
 }
