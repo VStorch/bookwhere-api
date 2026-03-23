@@ -15,7 +15,7 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = true)
 public class Library extends Account {
     
-    String phone;
-    Double latitude;
-    Double longitude;
+    private String phone;
+    private Double latitude;
+    private Double longitude;
 }
