@@ -2,6 +2,7 @@ package com.viniciusstorch.bookwhere_api.services;
 
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,9 +18,10 @@ import lombok.RequiredArgsConstructor;
 public class AccountService {
 
     private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Optional<Account> login(LoginRequestDTO loginRequest) {
         return accountRepository.findByEmail(loginRequest.email())
-        .filter(account -> account.getPassword().equals(loginRequest.password()));
+        .filter(account -> passwordEncoder.matches(loginRequest.password(), account.getPassword()));
     }
 }

@@ -2,6 +2,7 @@ package com.viniciusstorch.bookwhere_api.services;
 
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +19,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
     
-    final UserRepository userRepository;
-    final AccountRepository accountRepository;
+    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public Optional<User> registerUser(UserRegisterDTO userRegisterDTO) {
@@ -27,6 +29,8 @@ public class UserService {
             throw new IllegalArgumentException("Email already exists");
         }
         User userEntity = UserMapper.toEntity(userRegisterDTO);
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+
         userRepository.save(userEntity);
         return Optional.of(userEntity);
     }
