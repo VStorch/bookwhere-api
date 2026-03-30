@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.viniciusstorch.bookwhere_api.dtos.request.UserRegisterDTO;
 import com.viniciusstorch.bookwhere_api.mappers.UserMapper;
 import com.viniciusstorch.bookwhere_api.models.User;
+import com.viniciusstorch.bookwhere_api.models.enums.Role;
 import com.viniciusstorch.bookwhere_api.repositories.AccountRepository;
 import com.viniciusstorch.bookwhere_api.repositories.UserRepository;
 
@@ -30,6 +31,7 @@ public class UserService {
         }
         User userEntity = UserMapper.toEntity(userRegisterDTO);
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        userEntity.setRole(Role.ROLE_USER);
 
         userRepository.save(userEntity);
         return Optional.of(userEntity);

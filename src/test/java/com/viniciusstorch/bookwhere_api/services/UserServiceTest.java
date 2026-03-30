@@ -13,6 +13,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.viniciusstorch.bookwhere_api.dtos.request.UserRegisterDTO;
 import com.viniciusstorch.bookwhere_api.models.User;
+import com.viniciusstorch.bookwhere_api.models.enums.Role;
 import com.viniciusstorch.bookwhere_api.repositories.AccountRepository;
 import com.viniciusstorch.bookwhere_api.repositories.UserRepository;
 
@@ -47,6 +49,7 @@ public class UserServiceTest {
         user.setName(dto.name());
         user.setEmail(dto.email());
         user.setPassword("encodedPassword");
+        user.setRole(Role.ROLE_USER);
 
         when(accountRepository.findByEmail(dto.email())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(dto.password())).thenReturn("encodedPassword");
@@ -59,8 +62,12 @@ public class UserServiceTest {
         assertEquals("encodedPassword", result.get().getPassword());
 
         verify(accountRepository).findByEmail(dto.email());
-        // verify(passwordEncoder).encode(dto.password());
-        verify(userRepository).save(any());
+        verify(passwordEncoder).encode(dto.password());
+
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(userCaptor.capture());
+        User savedUser = userCaptor.getValue();
+        assertEquals(Role.ROLE_USER, savedUser.getRole());
     }
 
     @Test

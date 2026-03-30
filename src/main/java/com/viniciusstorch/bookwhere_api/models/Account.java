@@ -1,6 +1,10 @@
 package com.viniciusstorch.bookwhere_api.models;
 
+import com.viniciusstorch.bookwhere_api.models.enums.Role;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,4 +30,7 @@ public abstract class Account {
     private String name;
     private String email;
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }
