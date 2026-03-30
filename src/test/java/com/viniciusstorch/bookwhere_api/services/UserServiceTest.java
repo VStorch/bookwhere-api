@@ -49,7 +49,6 @@ public class UserServiceTest {
         user.setName(dto.name());
         user.setEmail(dto.email());
         user.setPassword("encodedPassword");
-        user.setRole(Role.ROLE_USER);
 
         when(accountRepository.findByEmail(dto.email())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(dto.password())).thenReturn("encodedPassword");
