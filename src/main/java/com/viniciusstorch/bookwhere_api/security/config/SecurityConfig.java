@@ -1,4 +1,4 @@
-package com.viniciusstorch.bookwhere_api.config;
+package com.viniciusstorch.bookwhere_api.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
