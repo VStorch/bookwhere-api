@@ -1,5 +1,7 @@
 package com.viniciusstorch.bookwhere_api.controllers;
 
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +24,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO loginRequest) {
-        return accountService.login(loginRequest)
-            .map(account -> ResponseEntity.ok().build())
-            .orElse(ResponseEntity.status(401).build());
+        String token = accountService.login(loginRequest);
+        return ResponseEntity.ok(Map.of("token", token));
     }
 }
