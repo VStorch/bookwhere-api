@@ -10,6 +10,9 @@ public class LibraryMapper {
         libraryEntity.setName(libraryRegisterDTO.name());
         libraryEntity.setEmail(libraryRegisterDTO.email());
         libraryEntity.setPassword(libraryRegisterDTO.password());
+        libraryEntity.setPhone(libraryRegisterDTO.phone());
+        libraryEntity.setLatitude(libraryRegisterDTO.latitude());
+        libraryEntity.setLongitude(libraryRegisterDTO.longitude()); 
         return libraryEntity;
     }
 }
