@@ -3,7 +3,6 @@ package com.viniciusstorch.bookwhere_api.security.jwt;
 import java.security.Key;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +14,13 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
     
-    @Autowired
-    private JwtProperties jwtProperties;
+    private final JwtProperties jwtProperties;
 
     public String generateToken(Account account) {
         return Jwts.builder()
@@ -31,11 +31,7 @@ public class JwtService {
                 .compact();
     }
 
-    public String extractEmail(String token) {
-        return extractClaims(token).getSubject();
-    }
-
-    private Claims extractClaims(String token) {
+    public Claims extractClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignKey())
                 .build()
@@ -43,13 +39,10 @@ public class JwtService {
                 .getBody();
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String email = extractEmail(token);
-        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
-
-    private boolean isTokenExpired(String token) {
-        return extractClaims(token).getExpiration().before(new Date());
+    public boolean isTokenValid(Claims claims, UserDetails userDetails) {
+        String email = claims.getSubject();
+        boolean notExpired = claims.getExpiration().after(new Date());
+        return email.equals(userDetails.getUsername()) && notExpired;
     }
 
     private Key getSignKey() {
