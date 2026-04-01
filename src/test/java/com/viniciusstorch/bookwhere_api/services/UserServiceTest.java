@@ -19,11 +19,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.viniciusstorch.bookwhere_api.dtos.request.UserRegisterDTO;
-import com.viniciusstorch.bookwhere_api.models.User;
-import com.viniciusstorch.bookwhere_api.models.enums.Role;
-import com.viniciusstorch.bookwhere_api.repositories.AccountRepository;
-import com.viniciusstorch.bookwhere_api.repositories.UserRepository;
+import com.viniciusstorch.bookwhere_api.account.model.Role;
+import com.viniciusstorch.bookwhere_api.account.repository.AccountRepository;
+import com.viniciusstorch.bookwhere_api.user.dto.request.UserRegisterDTO;
+import com.viniciusstorch.bookwhere_api.user.model.User;
+import com.viniciusstorch.bookwhere_api.user.repository.UserRepository;
+import com.viniciusstorch.bookwhere_api.user.service.UserService;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {

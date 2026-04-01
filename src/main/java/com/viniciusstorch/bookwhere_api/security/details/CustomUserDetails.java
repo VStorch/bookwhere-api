@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.viniciusstorch.bookwhere_api.models.Account;
+import com.viniciusstorch.bookwhere_api.account.model.Account;
 
 import lombok.RequiredArgsConstructor;
 

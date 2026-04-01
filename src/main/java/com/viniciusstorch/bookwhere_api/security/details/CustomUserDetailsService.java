@@ -5,8 +5,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.viniciusstorch.bookwhere_api.models.Account;
-import com.viniciusstorch.bookwhere_api.repositories.AccountRepository;
+import com.viniciusstorch.bookwhere_api.account.model.Account;
+import com.viniciusstorch.bookwhere_api.account.repository.AccountRepository;
 
 import lombok.RequiredArgsConstructor;
 

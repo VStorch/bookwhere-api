@@ -6,7 +6,7 @@ import java.util.Date;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.viniciusstorch.bookwhere_api.models.Account;
+import com.viniciusstorch.bookwhere_api.account.model.Account;
 import com.viniciusstorch.bookwhere_api.security.config.JwtProperties;
 
 import io.jsonwebtoken.Claims;
