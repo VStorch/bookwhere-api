@@ -9,6 +9,7 @@ import com.viniciusstorch.bookwhere_api.account.model.Role;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -27,6 +28,9 @@ public class Library extends Account {
 
     @OneToMany(mappedBy = "library", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LibraryHours> hours = new ArrayList<>();
+
+    @OneToOne(mappedBy = "library", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Address address;
 
     public Library() {
         super();
