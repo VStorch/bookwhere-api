@@ -34,7 +34,7 @@ public class Library extends Account {
 
     public Library() {
         super();
-        this.setRole(Role.ROLE_LIBRARY);
+        this.setRole(Role.LIBRARY);
     }
 
     public void addHour(LibraryHour hour) {

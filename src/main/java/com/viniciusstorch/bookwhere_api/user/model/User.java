@@ -17,6 +17,6 @@ import lombok.Setter;
 public class User extends Account {
     public User() {
         super();
-        this.setRole(Role.ROLE_USER);
+        this.setRole(Role.USER);
     }
 }

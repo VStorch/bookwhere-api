@@ -66,7 +66,7 @@ public class UserServiceTest {
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         verify(userRepository).save(userCaptor.capture());
         User savedUser = userCaptor.getValue();
-        assertEquals(Role.ROLE_USER, savedUser.getRole());
+        assertEquals(Role.USER, savedUser.getRole());
     }
 
     @Test
