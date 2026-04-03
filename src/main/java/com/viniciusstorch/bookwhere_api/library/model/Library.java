@@ -41,4 +41,11 @@ public class Library extends Account {
         hour.setLibrary(this);
         this.hours.add(hour);
     }
+
+    public void setAddress(Address address) {
+        if (address != null) {
+            address.setLibrary(this);
+        }
+        this.address = address;
+    }
 }
