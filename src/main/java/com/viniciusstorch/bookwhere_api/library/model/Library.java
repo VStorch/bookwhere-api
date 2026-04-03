@@ -21,13 +21,13 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 public class Library extends Account {
-    
+
     private String phone;
     private Double latitude;
     private Double longitude;
 
     @OneToMany(mappedBy = "library", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LibraryHours> hours = new ArrayList<>();
+    private List<LibraryHour> hours = new ArrayList<>();
 
     @OneToOne(mappedBy = "library", cascade = CascadeType.ALL, orphanRemoval = true)
     private Address address;
@@ -35,5 +35,10 @@ public class Library extends Account {
     public Library() {
         super();
         this.setRole(Role.ROLE_LIBRARY);
+    }
+
+    public void addHour(LibraryHour hour) {
+        hour.setLibrary(this);
+        this.hours.add(hour);
     }
 }
