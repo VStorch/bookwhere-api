@@ -3,7 +3,7 @@ package com.viniciusstorch.bookwhere_api.account.dto.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public record LoginRequestDTO(
+public record AuthRequestDTO(
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")

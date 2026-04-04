@@ -1,13 +1,12 @@
 package com.viniciusstorch.bookwhere_api.account.controller;
 
-import java.util.Map;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.viniciusstorch.bookwhere_api.account.dto.request.LoginRequestDTO;
+import com.viniciusstorch.bookwhere_api.account.dto.request.AuthRequestDTO;
+import com.viniciusstorch.bookwhere_api.account.dto.response.AuthResponseDTO;
 import com.viniciusstorch.bookwhere_api.account.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -20,11 +19,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 public class AuthController {
     
-    private final AuthService accountService;
+    private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO loginRequest) {
-        String token = accountService.login(loginRequest);
-        return ResponseEntity.ok(Map.of("token", token));
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid AuthRequestDTO loginRequest) {
+        AuthResponseDTO authResponse = authService.login(loginRequest);
+        return ResponseEntity.ok(authResponse);
     }
 }
