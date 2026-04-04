@@ -25,6 +25,8 @@ public record LibraryRegisterDTO(
     Double latitude,
 
     @NotNull(message = "Longitude is required")
-    Double longitude
+    Double longitude,
+
+    AddressRequestDTO address
 ) {
 }

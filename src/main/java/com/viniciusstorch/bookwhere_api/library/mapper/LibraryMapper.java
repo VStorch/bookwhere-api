@@ -13,6 +13,7 @@ public class LibraryMapper {
         libraryEntity.setPhone(libraryRegisterDTO.phone());
         libraryEntity.setLatitude(libraryRegisterDTO.latitude());
         libraryEntity.setLongitude(libraryRegisterDTO.longitude()); 
+        libraryEntity.setAddress(AddressMapper.toEntity(libraryRegisterDTO.address()));
         return libraryEntity;
     }
 }
