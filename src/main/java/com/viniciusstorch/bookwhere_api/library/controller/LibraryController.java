@@ -39,6 +39,10 @@ public class LibraryController {
         return ResponseEntity.ok(libraryService.getCurrentLibrary(userDetails.id()));
     }
 
+    @GetMapping
+    public ResponseEntity<?> getAllLibraries() {
+        return ResponseEntity.ok(libraryService.getAllLibraries());
+    }
 
     @PreAuthorize("hasRole('LIBRARY')")
     @PostMapping("/hours")

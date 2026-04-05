@@ -53,6 +53,12 @@ public class LibraryService {
         return LibraryMapper.toResponse(library);
     }
 
+    public List<LibraryResponseDTO> getAllLibraries() {
+        return libraryRepository.findAll().stream()
+            .map(LibraryMapper::toResponse)
+            .toList();
+    }
+
 
     @Transactional
     public void addLibraryHour(Long libraryId, LibraryHourRequestDTO hourDTO) {
