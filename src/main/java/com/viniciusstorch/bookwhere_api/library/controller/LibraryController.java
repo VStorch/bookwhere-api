@@ -33,6 +33,12 @@ public class LibraryController {
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("hasRole('LIBRARY')")
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentLibrary(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ResponseEntity.ok(libraryService.getCurrentLibrary(userDetails.id()));
+    }
+
 
     @PreAuthorize("hasRole('LIBRARY')")
     @PostMapping("/hours")

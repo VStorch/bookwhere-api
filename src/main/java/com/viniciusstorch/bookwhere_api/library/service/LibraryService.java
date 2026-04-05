@@ -13,6 +13,7 @@ import com.viniciusstorch.bookwhere_api.account.repository.AccountRepository;
 import com.viniciusstorch.bookwhere_api.library.dto.request.LibraryHourRequestDTO;
 import com.viniciusstorch.bookwhere_api.library.dto.request.LibraryRegisterDTO;
 import com.viniciusstorch.bookwhere_api.library.dto.response.LibraryHourResponseDTO;
+import com.viniciusstorch.bookwhere_api.library.dto.response.LibraryResponseDTO;
 import com.viniciusstorch.bookwhere_api.library.mapper.LibraryHourMapper;
 import com.viniciusstorch.bookwhere_api.library.mapper.LibraryMapper;
 import com.viniciusstorch.bookwhere_api.library.model.Library;
@@ -45,6 +46,12 @@ public class LibraryService {
         return accountRepository.findByEmail(email).isPresent();
     }
 
+    public LibraryResponseDTO getCurrentLibrary(Long libraryId) {
+        Library library = libraryRepository.findById(libraryId)
+            .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+
+        return LibraryMapper.toResponse(library);
+    }
 
 
     @Transactional

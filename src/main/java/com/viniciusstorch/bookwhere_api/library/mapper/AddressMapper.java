@@ -1,6 +1,7 @@
 package com.viniciusstorch.bookwhere_api.library.mapper;
 
 import com.viniciusstorch.bookwhere_api.library.dto.request.AddressRequestDTO;
+import com.viniciusstorch.bookwhere_api.library.dto.response.AddressResponseDTO;
 import com.viniciusstorch.bookwhere_api.library.model.Address;
 
 public class AddressMapper {
@@ -14,5 +15,17 @@ public class AddressMapper {
         address.setNumber(addressRequestDTO.number());
         address.setAddressComplement(addressRequestDTO.addressComplement());
         return address;
+    }
+
+    public static AddressResponseDTO toResponse(Address address) {
+        return new AddressResponseDTO(
+            address.getId(),
+            address.getState(),
+            address.getCity(),
+            address.getNeighborhood(),
+            address.getStreet(),
+            address.getNumber(),
+            address.getAddressComplement()
+        );
     }
 }
