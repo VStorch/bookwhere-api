@@ -11,6 +11,8 @@ import com.viniciusstorch.bookwhere_api.account.service.AuthService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
@@ -25,5 +27,10 @@ public class AuthController {
     public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid AuthRequestDTO loginRequest) {
         AuthResponseDTO authResponse = authService.login(loginRequest);
         return ResponseEntity.ok(authResponse);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<AuthResponseDTO> getCurrentUser() {
+        return ResponseEntity.ok(authService.getCurrentUser());
     }
 }

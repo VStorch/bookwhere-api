@@ -1,5 +1,6 @@
 package com.viniciusstorch.bookwhere_api.account.service;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,7 @@ import com.viniciusstorch.bookwhere_api.account.dto.response.AuthResponseDTO;
 import com.viniciusstorch.bookwhere_api.account.mapper.AuthMapper;
 import com.viniciusstorch.bookwhere_api.account.model.Account;
 import com.viniciusstorch.bookwhere_api.account.repository.AccountRepository;
+import com.viniciusstorch.bookwhere_api.security.details.CustomUserDetails;
 import com.viniciusstorch.bookwhere_api.security.jwt.JwtService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,5 +35,21 @@ public class AuthService {
         String token = jwtService.generateToken(account);
 
         return AuthMapper.toAuthResponseDTO(token, account);
+    }
+
+    public AuthResponseDTO getCurrentUser() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails userDetails)) {
+            throw new RuntimeException("User not authenticated");
+        }
+        
+        return new AuthResponseDTO(
+            null,
+            userDetails.id(),
+            userDetails.name(),
+            userDetails.email(),
+            userDetails.role()
+        );
     }
 }
