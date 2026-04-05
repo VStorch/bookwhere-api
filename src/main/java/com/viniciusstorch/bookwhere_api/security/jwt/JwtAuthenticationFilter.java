@@ -7,11 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.viniciusstorch.bookwhere_api.security.details.CustomUserDetailsService;
+import com.viniciusstorch.bookwhere_api.security.details.CustomUserDetails;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -29,7 +28,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     private final JwtService jwtService;
-    private final CustomUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -46,32 +44,43 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             Claims claims = jwtService.extractClaims(token);
+
+            Long id = claims.get("id", Long.class);
             String email = claims.getSubject();
+            String role = claims.get("role", String.class);
+            String name = claims.get("name", String.class);
 
-            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (id == null || email == null || role == null) {
+                sendUnauthorized(response, "Invalid token claims");
+                return;
+            }
 
-                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+            if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                if (jwtService.isTokenValid(claims, userDetails)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities());
+                CustomUserDetails userDetails = new CustomUserDetails(
+                        id,
+                        email,
+                        name,
+                        role);
 
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities());
+
+                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
 
         } catch (ExpiredJwtException e) {
-            log.warn("Token expired: " + e.getMessage());
+            log.debug("Token expired: {} ", e.getMessage());
             sendUnauthorized(response, "Token expired");
             return;
         } catch (JwtException e) {
-            log.warn("Invalid token: " + e.getMessage());
+            log.debug("Invalid token: {} ", e.getMessage());
             sendUnauthorized(response, "Invalid token");
             return;
         } catch (Exception e) {
-            log.error("Authentication error: " + e.getMessage());
+            log.error("Authentication error: {} ", e.getMessage());
             sendUnauthorized(response, "Authentication error");
             return;
         }

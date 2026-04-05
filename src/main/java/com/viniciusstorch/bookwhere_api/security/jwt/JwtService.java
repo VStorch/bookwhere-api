@@ -3,7 +3,6 @@ package com.viniciusstorch.bookwhere_api.security.jwt;
 import java.security.Key;
 import java.util.Date;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.viniciusstorch.bookwhere_api.account.model.Account;
@@ -14,6 +13,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -21,12 +21,16 @@ import lombok.RequiredArgsConstructor;
 public class JwtService {
     
     private final JwtProperties jwtProperties;
+    private Key signingKey;
 
     public String generateToken(Account account) {
         return Jwts.builder()
                 .setSubject(account.getEmail())
+                .claim("id", account.getId())
+                .claim("role", account.getRole().name())
+                .claim("name", account.getName())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpirationMs()))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -39,14 +43,14 @@ public class JwtService {
                 .getBody();
     }
 
-    public boolean isTokenValid(Claims claims, UserDetails userDetails) {
-        String email = claims.getSubject();
-        boolean notExpired = claims.getExpiration().after(new Date());
-        return email.equals(userDetails.getUsername()) && notExpired;
+
+    @PostConstruct
+    private void initSignKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.getSecret());
+        this.signingKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
     private Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.getSecret());
-        return Keys.hmacShaKeyFor(keyBytes);
+        return signingKey;
     }
 }

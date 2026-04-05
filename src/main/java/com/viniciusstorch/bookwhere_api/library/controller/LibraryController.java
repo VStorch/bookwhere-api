@@ -37,27 +37,27 @@ public class LibraryController {
     @PreAuthorize("hasRole('LIBRARY')")
     @PostMapping("/hours")
     public ResponseEntity<?> addLibraryHour(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody @Valid LibraryHourRequestDTO hourDTO) {
-        libraryService.addLibraryHour(userDetails.getId(), hourDTO);
+        libraryService.addLibraryHour(userDetails.id(), hourDTO);
         return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("hasRole('LIBRARY')")
     @GetMapping("/hours")
     public ResponseEntity<?> getLibraryHours(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        return ResponseEntity.ok(libraryService.getLibraryHours(userDetails.getId()));
+        return ResponseEntity.ok(libraryService.getLibraryHours(userDetails.id()));
     }
 
     @PreAuthorize("hasRole('LIBRARY')")
     @PutMapping("/hours/{hourId}")
     public ResponseEntity<?> updateLibraryHour(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long hourId, @RequestBody @Valid LibraryHourRequestDTO updateHourDTO) {
-        libraryService.updateLibraryHour(userDetails.getId(), hourId, updateHourDTO);
+        libraryService.updateLibraryHour(userDetails.id(), hourId, updateHourDTO);
         return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("hasRole('LIBRARY')")
     @DeleteMapping("/hours/{hourId}")
     public ResponseEntity<?> removeLibraryHour(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long hourId) {
-        libraryService.removeLibraryHour(userDetails.getId(), hourId);
+        libraryService.removeLibraryHour(userDetails.id(), hourId);
         return ResponseEntity.ok().build();
     }
 }
