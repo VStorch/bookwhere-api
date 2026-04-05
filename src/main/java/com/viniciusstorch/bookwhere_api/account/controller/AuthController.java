@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.viniciusstorch.bookwhere_api.account.dto.request.AuthRequestDTO;
 import com.viniciusstorch.bookwhere_api.account.dto.response.AuthResponseDTO;
+import com.viniciusstorch.bookwhere_api.account.dto.response.MeResponseDTO;
 import com.viniciusstorch.bookwhere_api.account.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -30,7 +31,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<AuthResponseDTO> getCurrentUser() {
+    public ResponseEntity<MeResponseDTO> getCurrentUser() {
         return ResponseEntity.ok(authService.getCurrentUser());
     }
 }
