@@ -60,6 +60,12 @@ public class LibraryService {
             .toList();
     }
 
+    @Transactional
+    public void deleteLibrary(Long libraryId) {
+        if (!libraryRepository.existsById(libraryId))
+            throw new IllegalArgumentException("Library not found");
+        libraryRepository.deleteById(libraryId);
+    }
 
     @Transactional
     public void addLibraryHour(Long libraryId, LibraryHourRequestDTO hourDTO) {

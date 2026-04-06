@@ -45,6 +45,14 @@ public class LibraryController {
     }
 
     @PreAuthorize("hasRole('LIBRARY')")
+    @DeleteMapping("/me")
+    public ResponseEntity<?> deleteLibrary(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        libraryService.deleteLibrary(userDetails.id());
+        return ResponseEntity.ok().build();
+    }
+
+
+    @PreAuthorize("hasRole('LIBRARY')")
     @PostMapping("/hours")
     public ResponseEntity<?> addLibraryHour(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody @Valid LibraryHourRequestDTO hourDTO) {
         libraryService.addLibraryHour(userDetails.id(), hourDTO);
