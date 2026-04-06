@@ -3,7 +3,6 @@ package com.viniciusstorch.bookwhere_api.library.service;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,14 +33,14 @@ public class LibraryService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Optional<LibraryResponseDTO> registerLibrary(LibraryRegisterDTO libraryRegisterDTO) {
+    public LibraryResponseDTO registerLibrary(LibraryRegisterDTO libraryRegisterDTO) {
         if (emailAlreadyExists(libraryRegisterDTO.email()))
             throw new IllegalArgumentException("Email already exists");
 
         Library libraryEntity = LibraryMapper.toEntity(libraryRegisterDTO);
         libraryEntity.setPassword(passwordEncoder.encode(libraryEntity.getPassword()));
 
-        return Optional.of(LibraryMapper.toResponse(libraryRepository.save(libraryEntity)));
+        return LibraryMapper.toResponse(libraryRepository.save(libraryEntity));
     }
 
     private boolean emailAlreadyExists(String email) {
@@ -71,14 +70,14 @@ public class LibraryService {
 
     @Transactional
     public void deleteLibrary(Long libraryId) {
-        if (!libraryRepository.existsById(libraryId))
-            throw new IllegalArgumentException("Library not found");
-        libraryRepository.deleteById(libraryId);
+        Library library = libraryRepository.findById(libraryId)
+            .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+        libraryRepository.delete(library);
     }
 
 
     @Transactional
-    public void addLibraryHour(Long libraryId, LibraryHourRequestDTO hourDTO) {
+    public LibraryHourResponseDTO addLibraryHour(Long libraryId, LibraryHourRequestDTO hourDTO) {
         Library library = libraryRepository.findById(libraryId)
             .orElseThrow(() -> new IllegalArgumentException("Library not found"));
 
@@ -87,6 +86,7 @@ public class LibraryService {
 
         LibraryHour newHour = LibraryHourMapper.toEntity(hourDTO);
         library.addHour(newHour);
+        return LibraryHourMapper.toDTO(newHour);
     }
 
     public List<LibraryHourResponseDTO> getLibraryHours(Long libraryId) {
@@ -98,7 +98,7 @@ public class LibraryService {
     }
 
     @Transactional
-    public void updateLibraryHour(Long libraryId, Long hourId, LibraryHourRequestDTO updateHourDTO) {
+    public LibraryHourResponseDTO updateLibraryHour(Long libraryId, Long hourId, LibraryHourRequestDTO updateHourDTO) {
         Library library = libraryRepository.findById(libraryId)
             .orElseThrow(() -> new IllegalArgumentException("Library not found"));
 
@@ -113,6 +113,7 @@ public class LibraryService {
         existingHour.setWeekDay(updateHourDTO.weekDay());
         existingHour.setOpeningTime(updateHourDTO.openingTime());
         existingHour.setClosingTime(updateHourDTO.closingTime());
+        return LibraryHourMapper.toDTO(existingHour);
     }
 
     @Transactional
