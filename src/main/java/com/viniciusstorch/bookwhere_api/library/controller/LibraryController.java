@@ -30,8 +30,7 @@ public class LibraryController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerLibrary(@RequestBody @Valid LibraryRegisterDTO libraryRegisterDTO) {
-        libraryService.registerLibrary(libraryRegisterDTO);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(libraryService.registerLibrary(libraryRegisterDTO));
     }
 
     @PreAuthorize("hasRole('LIBRARY')")

@@ -34,14 +34,14 @@ public class LibraryService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Optional<Library> registerLibrary(LibraryRegisterDTO libraryRegisterDTO) {
+    public Optional<LibraryResponseDTO> registerLibrary(LibraryRegisterDTO libraryRegisterDTO) {
         if (emailAlreadyExists(libraryRegisterDTO.email()))
             throw new IllegalArgumentException("Email already exists");
 
         Library libraryEntity = LibraryMapper.toEntity(libraryRegisterDTO);
         libraryEntity.setPassword(passwordEncoder.encode(libraryEntity.getPassword()));
 
-        return Optional.of(libraryRepository.save(libraryEntity));
+        return Optional.of(LibraryMapper.toResponse(libraryRepository.save(libraryEntity)));
     }
 
     private boolean emailAlreadyExists(String email) {
