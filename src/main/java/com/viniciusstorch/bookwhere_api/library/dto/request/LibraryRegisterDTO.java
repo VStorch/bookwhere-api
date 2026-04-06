@@ -1,6 +1,5 @@
 package com.viniciusstorch.bookwhere_api.library.dto.request;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -28,8 +27,6 @@ public record LibraryRegisterDTO(
     @NotNull(message = "Longitude is required")
     Double longitude,
 
-    @Valid
-    @NotNull(message = "Address is required")
     AddressRequestDTO address
 ) {
 }
