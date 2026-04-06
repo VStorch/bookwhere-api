@@ -1,6 +1,7 @@
 package com.viniciusstorch.bookwhere_api.library.mapper;
 
 import com.viniciusstorch.bookwhere_api.library.dto.request.LibraryRegisterDTO;
+import com.viniciusstorch.bookwhere_api.library.dto.request.LibraryUpdateDTO;
 import com.viniciusstorch.bookwhere_api.library.dto.response.LibraryResponseDTO;
 import com.viniciusstorch.bookwhere_api.library.dto.response.MyLibraryResponseDTO;
 import com.viniciusstorch.bookwhere_api.library.model.Library;
@@ -37,5 +38,13 @@ public class LibraryMapper {
             library.getLatitude(),
             library.getLongitude(),
             AddressMapper.toResponse(library.getAddress()));
+    }
+
+    public static void updateEntityFromDTO(Library library, LibraryUpdateDTO updateDTO) {
+        library.setName(updateDTO.name());
+        library.setPhone(updateDTO.phone());
+        library.setLatitude(updateDTO.latitude());
+        library.setLongitude(updateDTO.longitude());
+        AddressMapper.updateEntity(library.getAddress(), updateDTO.address());
     }
 }

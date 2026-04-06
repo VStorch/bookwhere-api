@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.viniciusstorch.bookwhere_api.library.dto.request.LibraryHourRequestDTO;
 import com.viniciusstorch.bookwhere_api.library.dto.request.LibraryRegisterDTO;
+import com.viniciusstorch.bookwhere_api.library.dto.request.LibraryUpdateDTO;
 import com.viniciusstorch.bookwhere_api.library.service.LibraryService;
 import com.viniciusstorch.bookwhere_api.security.details.CustomUserDetails;
 
@@ -42,6 +43,12 @@ public class LibraryController {
     @GetMapping
     public ResponseEntity<?> getAllLibraries() {
         return ResponseEntity.ok(libraryService.getAllLibraries());
+    }
+
+    @PreAuthorize("hasRole('LIBRARY')")
+    @PutMapping("/me")
+    public ResponseEntity<?> updateLibrary(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody @Valid LibraryUpdateDTO updateDTO) {
+        return ResponseEntity.ok(libraryService.updateLibrary(userDetails.id(), updateDTO));
     }
 
     @PreAuthorize("hasRole('LIBRARY')")

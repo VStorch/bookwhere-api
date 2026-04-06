@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.viniciusstorch.bookwhere_api.account.repository.AccountRepository;
 import com.viniciusstorch.bookwhere_api.library.dto.request.LibraryHourRequestDTO;
 import com.viniciusstorch.bookwhere_api.library.dto.request.LibraryRegisterDTO;
+import com.viniciusstorch.bookwhere_api.library.dto.request.LibraryUpdateDTO;
 import com.viniciusstorch.bookwhere_api.library.dto.response.LibraryHourResponseDTO;
 import com.viniciusstorch.bookwhere_api.library.dto.response.LibraryResponseDTO;
 import com.viniciusstorch.bookwhere_api.library.dto.response.MyLibraryResponseDTO;
@@ -61,11 +62,20 @@ public class LibraryService {
     }
 
     @Transactional
+    public LibraryResponseDTO updateLibrary(Long libraryId, LibraryUpdateDTO updateDTO) {
+        Library library = libraryRepository.findById(libraryId)
+            .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+        LibraryMapper.updateEntityFromDTO(library, updateDTO);
+        return LibraryMapper.toResponse(libraryRepository.save(library));
+    }
+
+    @Transactional
     public void deleteLibrary(Long libraryId) {
         if (!libraryRepository.existsById(libraryId))
             throw new IllegalArgumentException("Library not found");
         libraryRepository.deleteById(libraryId);
     }
+
 
     @Transactional
     public void addLibraryHour(Long libraryId, LibraryHourRequestDTO hourDTO) {

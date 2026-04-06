@@ -28,4 +28,13 @@ public class AddressMapper {
             address.getAddressComplement()
         );
     }
+
+    public static void updateEntity(Address address, AddressRequestDTO dto) {
+        address.setState(dto.state());
+        address.setCity(dto.city());
+        address.setNeighborhood(dto.neighborhood());
+        address.setStreet(dto.street());
+        address.setNumber(dto.number());
+        address.setAddressComplement(dto.addressComplement());
+    }
 }
