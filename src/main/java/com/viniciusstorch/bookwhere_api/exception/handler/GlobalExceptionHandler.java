@@ -8,7 +8,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.viniciusstorch.bookwhere_api.exception.custom.BusinessException;
 import com.viniciusstorch.bookwhere_api.exception.custom.ResourceNotFoundException;
+import com.viniciusstorch.bookwhere_api.exception.custom.UnauthorizedException;
 import com.viniciusstorch.bookwhere_api.exception.dto.ErrorResponseDTO;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +30,34 @@ public class GlobalExceptionHandler {
             request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponseDTO> handleBusinessException(
+        BusinessException ex, HttpServletRequest request
+    ) {
+        ErrorResponseDTO error = new ErrorResponseDTO(
+            LocalDateTime.now(),
+            HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.BAD_REQUEST.name(),
+            ex.getMessage(),
+            request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponseDTO> handleUnauthorizedException(
+        UnauthorizedException ex, HttpServletRequest request
+    ) {
+        ErrorResponseDTO error = new ErrorResponseDTO(
+            LocalDateTime.now(),
+            HttpStatus.UNAUTHORIZED.value(),
+            HttpStatus.UNAUTHORIZED.name(),
+            ex.getMessage(),
+            request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

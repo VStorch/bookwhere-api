@@ -11,6 +11,7 @@ import com.viniciusstorch.bookwhere_api.account.dto.response.MeResponseDTO;
 import com.viniciusstorch.bookwhere_api.account.mapper.AuthMapper;
 import com.viniciusstorch.bookwhere_api.account.model.Account;
 import com.viniciusstorch.bookwhere_api.account.repository.AccountRepository;
+import com.viniciusstorch.bookwhere_api.exception.custom.UnauthorizedException;
 import com.viniciusstorch.bookwhere_api.security.details.CustomUserDetails;
 import com.viniciusstorch.bookwhere_api.security.jwt.JwtService;
 
@@ -27,10 +28,10 @@ public class AuthService {
 
     public AuthResponseDTO login(AuthRequestDTO loginRequest) {
         Account account = accountRepository.findByEmail(loginRequest.email())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
 
         if (!passwordEncoder.matches(loginRequest.password(), account.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+            throw new UnauthorizedException("Invalid credentials");
         }
 
         String token = jwtService.generateToken(account);
@@ -42,7 +43,7 @@ public class AuthService {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         
         if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails userDetails)) {
-            throw new RuntimeException("User not authenticated");
+            throw new UnauthorizedException("User not authenticated");
         }
         
         return new MeResponseDTO(
