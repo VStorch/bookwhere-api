@@ -124,9 +124,9 @@ public class LibraryServiceTest {
         var result = libraryService.addLibraryHour(libraryId, hourDTO);
 
         assertTrue(result != null);
-        assertTrue(result.weekDay().equals(WeekDay.MONDAY));
-        assertTrue(result.openingTime().equals(LocalTime.of(9, 0)));
-        assertTrue(result.closingTime().equals(LocalTime.of(17, 0)));
+        assertEquals(WeekDay.MONDAY, result.weekDay());
+        assertEquals(LocalTime.of(9, 0), result.openingTime());
+        assertEquals(LocalTime.of(17, 0), result.closingTime());
 
         assertTrue(library.getHours().size() == 1);
     }
@@ -179,5 +179,44 @@ public class LibraryServiceTest {
         when(libraryRepository.findById(libraryId)).thenReturn(Optional.of(library));
 
         assertThrows(IllegalArgumentException.class, () -> libraryService.addLibraryHour(libraryId, hourDTO));
+    }
+
+    @Test
+    @DisplayName("Should update library hour successfully")
+    void shouldUpdateLibraryHourSuccessfully() {
+
+        Long libraryId = 1L;
+        Long hourId = 1L;
+
+        Library library = new Library();
+        library.setId(libraryId);
+        library.setHours(new ArrayList<>());
+
+        LibraryHour existingHour = new LibraryHour();
+        existingHour.setId(hourId);
+        existingHour.setWeekDay(WeekDay.MONDAY);
+        existingHour.setOpeningTime(LocalTime.of(9, 0));
+        existingHour.setClosingTime(LocalTime.of(17, 0));
+
+        library.getHours().add(existingHour);
+
+        LibraryHourRequestDTO updateHourDTO = new LibraryHourRequestDTO(
+            WeekDay.MONDAY,
+            LocalTime.of(10, 0),
+            LocalTime.of(18, 0)
+        );
+
+        when(libraryRepository.findById(libraryId)).thenReturn(Optional.of(library));
+
+        var result = libraryService.updateLibraryHour(libraryId, hourId, updateHourDTO);
+
+        assertTrue(result != null);
+        assertEquals(WeekDay.MONDAY, result.weekDay());
+        assertEquals(LocalTime.of(10, 0), result.openingTime());
+        assertEquals(LocalTime.of(18, 0), result.closingTime());
+        assertEquals(LocalTime.of(10, 0), existingHour.getOpeningTime());
+        assertEquals(LocalTime.of(18, 0), existingHour.getClosingTime());
+
+        assertTrue(library.getHours().size() == 1);
     }
 }
