@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.viniciusstorch.bookwhere_api.account.repository.AccountRepository;
+import com.viniciusstorch.bookwhere_api.exception.custom.BusinessException;
 import com.viniciusstorch.bookwhere_api.library.dto.request.AddressRequestDTO;
 import com.viniciusstorch.bookwhere_api.library.dto.request.LibraryHourRequestDTO;
 import com.viniciusstorch.bookwhere_api.library.dto.request.LibraryRegisterDTO;
@@ -149,7 +150,7 @@ public class LibraryServiceTest {
 
         when(libraryRepository.findById(libraryId)).thenReturn(Optional.of(library));
 
-        assertThrows(IllegalArgumentException.class, () -> libraryService.addLibraryHour(libraryId, hourDTO));
+        assertThrows(BusinessException.class, () -> libraryService.addLibraryHour(libraryId, hourDTO));
     }
 
     @Test
@@ -178,7 +179,7 @@ public class LibraryServiceTest {
 
         when(libraryRepository.findById(libraryId)).thenReturn(Optional.of(library));
 
-        assertThrows(IllegalArgumentException.class, () -> libraryService.addLibraryHour(libraryId, hourDTO));
+        assertThrows(BusinessException.class, () -> libraryService.addLibraryHour(libraryId, hourDTO));
     }
 
     @Test

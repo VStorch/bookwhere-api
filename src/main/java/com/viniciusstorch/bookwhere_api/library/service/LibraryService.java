@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.viniciusstorch.bookwhere_api.account.repository.AccountRepository;
+import com.viniciusstorch.bookwhere_api.exception.custom.BusinessException;
+import com.viniciusstorch.bookwhere_api.exception.custom.ResourceNotFoundException;
 import com.viniciusstorch.bookwhere_api.library.dto.request.LibraryHourRequestDTO;
 import com.viniciusstorch.bookwhere_api.library.dto.request.LibraryRegisterDTO;
 import com.viniciusstorch.bookwhere_api.library.dto.request.LibraryUpdateDTO;
@@ -35,7 +37,7 @@ public class LibraryService {
     @Transactional
     public LibraryResponseDTO registerLibrary(LibraryRegisterDTO libraryRegisterDTO) {
         if (emailAlreadyExists(libraryRegisterDTO.email()))
-            throw new IllegalArgumentException("Email already exists");
+            throw new BusinessException("Email already exists");
 
         Library libraryEntity = LibraryMapper.toEntity(libraryRegisterDTO);
         libraryEntity.setPassword(passwordEncoder.encode(libraryEntity.getPassword()));
@@ -49,7 +51,7 @@ public class LibraryService {
 
     public MyLibraryResponseDTO getCurrentLibrary(Long libraryId) {
         Library library = libraryRepository.findById(libraryId)
-            .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Library not found"));
 
         return LibraryMapper.toMyLibraryResponse(library);
     }
@@ -63,7 +65,7 @@ public class LibraryService {
     @Transactional
     public LibraryResponseDTO updateLibrary(Long libraryId, LibraryUpdateDTO updateDTO) {
         Library library = libraryRepository.findById(libraryId)
-            .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Library not found"));
         LibraryMapper.updateEntityFromDTO(library, updateDTO);
         return LibraryMapper.toResponse(libraryRepository.save(library));
     }
@@ -71,7 +73,7 @@ public class LibraryService {
     @Transactional
     public void deleteLibrary(Long libraryId) {
         Library library = libraryRepository.findById(libraryId)
-            .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Library not found"));
         libraryRepository.delete(library);
     }
 
@@ -79,7 +81,7 @@ public class LibraryService {
     @Transactional
     public LibraryHourResponseDTO addLibraryHour(Long libraryId, LibraryHourRequestDTO hourDTO) {
         Library library = libraryRepository.findById(libraryId)
-            .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Library not found"));
 
         validateTimeRange(hourDTO.openingTime(), hourDTO.closingTime());
         checkTimeOverlap(library, hourDTO, null);
@@ -91,7 +93,7 @@ public class LibraryService {
 
     public List<LibraryHourResponseDTO> getLibraryHours(Long libraryId) {
         Library library = libraryRepository.findById(libraryId)
-            .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Library not found"));
         return library.getHours().stream()
             .map(LibraryHourMapper::toDTO)
             .toList();
@@ -100,7 +102,7 @@ public class LibraryService {
     @Transactional
     public LibraryHourResponseDTO updateLibraryHour(Long libraryId, Long hourId, LibraryHourRequestDTO updateHourDTO) {
         Library library = libraryRepository.findById(libraryId)
-            .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Library not found"));
 
         validateTimeRange(updateHourDTO.openingTime(), updateHourDTO.closingTime());
         checkTimeOverlap(library, updateHourDTO, hourId);
@@ -108,7 +110,7 @@ public class LibraryService {
         LibraryHour existingHour = library.getHours().stream()
             .filter(hour -> hour.getId().equals(hourId))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Hour not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Library hour not found"));
 
         existingHour.setWeekDay(updateHourDTO.weekDay());
         existingHour.setOpeningTime(updateHourDTO.openingTime());
@@ -119,16 +121,16 @@ public class LibraryService {
     @Transactional
     public void removeLibraryHour(Long libraryId, Long hourId) {
         Library library = libraryRepository.findById(libraryId)
-            .orElseThrow(() -> new IllegalArgumentException("Library not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Library not found"));
         
         boolean removed = library.getHours().removeIf(hour -> hour.getId().equals(hourId));
         if (!removed)
-            throw new IllegalArgumentException("Hour not found");
+            throw new ResourceNotFoundException("Library hour not found");
     }
 
     private void validateTimeRange(LocalTime openingTime, LocalTime closingTime) {
         if (!closingTime.isAfter(openingTime))
-            throw new IllegalArgumentException("Closing time cannot be before opening time");
+            throw new BusinessException("Closing time must be after opening time");
     }
 
     private void checkTimeOverlap(Library library, LibraryHourRequestDTO hourDTO, Long hourIdToIgnore) {
@@ -140,6 +142,6 @@ public class LibraryService {
                 hourDTO.openingTime().isBefore(hour.getClosingTime())
             );
         if (hasOverlap)
-            throw new IllegalArgumentException("Time range overlaps with an existing hour");
+            throw new BusinessException("Time range overlaps with an existing hour");
     }
 }
