@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.viniciusstorch.bookwhere_api.security.handler.CustomAccessDeniedHandler;
+import com.viniciusstorch.bookwhere_api.security.handler.CustomAuthenticationEntryPoint;
 import com.viniciusstorch.bookwhere_api.security.jwt.JwtAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
@@ -20,11 +22,17 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtFilter;
+    private final CustomAuthenticationEntryPoint authEntryPoint;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+            .exceptionHandling(exceptionHandling -> exceptionHandling
+                .authenticationEntryPoint(authEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler)
+            )
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

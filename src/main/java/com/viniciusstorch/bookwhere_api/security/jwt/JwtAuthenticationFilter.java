@@ -2,8 +2,6 @@ package com.viniciusstorch.bookwhere_api.security.jwt;
 
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,8 +22,6 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
-    private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     private final JwtService jwtService;
 
@@ -72,16 +68,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
         } catch (ExpiredJwtException e) {
-            log.debug("Token expired: {} ", e.getMessage());
-            sendUnauthorized(response, "Token expired");
+            request.setAttribute("auth_error", "Invalid or expired token");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         } catch (JwtException e) {
-            log.debug("Invalid token: {} ", e.getMessage());
-            sendUnauthorized(response, "Invalid token");
+            request.setAttribute("auth_error", "Invalid or expired token");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         } catch (Exception e) {
-            log.error("Authentication error: {} ", e.getMessage());
-            sendUnauthorized(response, "Authentication error");
+            request.setAttribute("auth_error", "Authentication failed");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
