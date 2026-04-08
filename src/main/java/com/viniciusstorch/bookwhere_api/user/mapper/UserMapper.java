@@ -1,6 +1,7 @@
 package com.viniciusstorch.bookwhere_api.user.mapper;
 
 import com.viniciusstorch.bookwhere_api.user.dto.request.UserRegisterDTO;
+import com.viniciusstorch.bookwhere_api.user.dto.response.UserResponseDTO;
 import com.viniciusstorch.bookwhere_api.user.model.User;
 
 public class UserMapper {
@@ -11,5 +12,13 @@ public class UserMapper {
         userEntity.setEmail(userRegisterDTO.email());
         userEntity.setPassword(userRegisterDTO.password());
         return userEntity;
+    }
+
+    public static UserResponseDTO toDTO(User user) {
+        return new UserResponseDTO(
+            user.getId(),
+            user.getName(),
+            user.getEmail()
+        );
     }
 }
