@@ -2,7 +2,6 @@ package com.viniciusstorch.bookwhere_api.user.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.ArgumentMatchers.any;
@@ -21,7 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.viniciusstorch.bookwhere_api.account.model.Role;
 import com.viniciusstorch.bookwhere_api.account.repository.AccountRepository;
+import com.viniciusstorch.bookwhere_api.exception.custom.BusinessException;
 import com.viniciusstorch.bookwhere_api.user.dto.request.UserRegisterDTO;
+import com.viniciusstorch.bookwhere_api.user.dto.response.UserResponseDTO;
 import com.viniciusstorch.bookwhere_api.user.model.User;
 import com.viniciusstorch.bookwhere_api.user.repository.UserRepository;
 
@@ -54,11 +55,9 @@ public class UserServiceTest {
         when(passwordEncoder.encode(dto.password())).thenReturn("encodedPassword");
         when(userRepository.save(any())).thenReturn(user);
 
-        Optional<User> result = userService.registerUser(dto);
+        UserResponseDTO result = userService.registerUser(dto);
 
-        assertTrue(result.isPresent());
-        assertEquals("João", result.get().getName());
-        assertEquals("encodedPassword", result.get().getPassword());
+        assertEquals("João", result.name());
 
         verify(accountRepository).findByEmail(dto.email());
         verify(passwordEncoder).encode(dto.password());
@@ -75,7 +74,7 @@ public class UserServiceTest {
         UserRegisterDTO dto = new UserRegisterDTO("Maria", "maria@example.com", "123456");
         when(accountRepository.findByEmail(dto.email())).thenReturn(Optional.of(new User()));
 
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(BusinessException.class, () -> {
             userService.registerUser(dto);
         });
 
