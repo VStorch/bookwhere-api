@@ -9,20 +9,24 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "book_editions")
+@Getter
+@Setter
 public class BookEdition {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String isbn;
+    private String isbn;
 
-    LocalDate publicationYear;
+    private LocalDate publicationYear;
 
-    String image;
+    private String image;
 
     @ManyToOne
     @JoinColumn(name = "work_id", nullable = false)
