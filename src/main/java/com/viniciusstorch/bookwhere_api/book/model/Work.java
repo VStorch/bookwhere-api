@@ -28,4 +28,7 @@ public class Work {
 
     @OneToMany(mappedBy = "work", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BookEdition> editions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "work", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WorkAuthor> workAuthors = new ArrayList<>();
 }
