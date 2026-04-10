@@ -27,4 +27,8 @@ public class BookEdition {
     @ManyToOne
     @JoinColumn(name = "work_id", nullable = false)
     private Work work;
+
+    @ManyToOne
+    @JoinColumn(name = "publisher_id", nullable = false)
+    private Publisher publisher;
 }
