@@ -30,8 +30,8 @@ public class Work {
     private List<Tag> tags = new ArrayList<>();
 
     @OneToMany(mappedBy = "work", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BookEdition> editions = new ArrayList<>();
+    private List<WorkAuthor> workAuthors = new ArrayList<>();
 
     @OneToMany(mappedBy = "work", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WorkAuthor> workAuthors = new ArrayList<>();
+    private List<BookEdition> editions = new ArrayList<>();
 }
