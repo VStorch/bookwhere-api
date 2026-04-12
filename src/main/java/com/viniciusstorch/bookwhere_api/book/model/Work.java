@@ -1,7 +1,9 @@
 package com.viniciusstorch.bookwhere_api.book.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -34,4 +36,7 @@ public class Work {
 
     @OneToMany(mappedBy = "work", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BookEdition> editions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "work", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<WorkGenre> genres = new HashSet<>();
 }
