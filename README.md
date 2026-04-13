@@ -198,4 +198,5 @@ bookwhere-api/
 ### Status do Projeto
 
 **Em desenvolvimento**
+
 Foco atual: domínio dos livros
