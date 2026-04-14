@@ -51,7 +51,8 @@ A aplicação separa claramente o conceito de **obra**, **edição** e **exempla
 
 ### Decisões de Projeto
 
-- Arquitetura em camadas (Controller → Service → Repository)
+- Organização Package by Feature: Código estruturado em torno dos domínios de negócio (Account, Book, Library), aumentando a coesão e facilitando a modularização.
+- Arquitetura em camadas (dentro dos pacotes): Separação clara entre Controller, Service e Repository para cada funcionalidade.
 - Uso de DTOs para isolamento da camada de API
 - Modelagem rica de domínio separando:
   - Work (obra)
@@ -88,7 +89,10 @@ A aplicação separa claramente o conceito de **obra**, **edição** e **exempla
 
 **Banco de dados**
 - PostgreSQL
-- H2 (testes)
+
+**Testes**
+- JUnit
+- H2
 
 **Auxiliares**
 - Lombok
@@ -110,15 +114,17 @@ A API implementa autenticação baseada em **JWT (JSON Web Token)**.
 
 ### Arquitetura
 
-O projeto segue uma arquitetura em **camadas**, promovendo separação de responsabilidades:
+O projeto utiliza a estratégia **Package by Feature**, onde o código é organizado em pacotes baseados em funcionalidades ou domínios de negócio, em vez de tipos técnicos. Dentro de cada pacote, a separação de responsabilidades em camadas é mantida:
 
-- **Controller** → Entrada das requisições HTTP  
-- **Service** → Regras de negócio  
-- **Repository** → Acesso ao banco  
-- **Model** → Entidades JPA  
-- **DTO / Mapper** → Transferência de dados  
-- **Security** → Configurações de autenticação e autorização  
-- **Exception** → Tratamento global de erros  
+- **Controller** → Entrada das requisições HTTP
+- **Service** → Regras de negócio
+- **Repository** → Acesso ao banco
+- **Model** → Entidades JPA
+- **DTO / Mapper** → Transferência de dados
+- **Security** → Configurações de autenticação e autorização
+- **Exception** → Tratamento global de erros
+
+**Cross-cutting Concerns:** Pastas como security e exception gerenciam aspectos globais que atravessam todas as funcionalidades.
 
 Essa organização facilita manutenção, testes e escalabilidade.
 
